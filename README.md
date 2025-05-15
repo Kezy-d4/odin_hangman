@@ -1,1 +1,1 @@
-# odin_hangman
+# Hangman
