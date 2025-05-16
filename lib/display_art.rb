@@ -1,5 +1,5 @@
-# Stores and prints the hangman ascii art.
-module Display
+# Stores and prints the hangman ASCII art.
+module DisplayArt
   HANGMAN_PICS = ['
     +---+
         |
