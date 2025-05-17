@@ -12,7 +12,7 @@ module Message
   end
 
   def input_instructions_msg
-    print "Submit your next guess. You may guess a single remaining letter or " \
+    print "Submit your next guess. You may guess a single letter or " \
           "try to guess the entire word: "
   end
 

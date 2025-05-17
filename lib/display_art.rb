@@ -58,7 +58,7 @@ module DisplayArt
         |
   ========='].freeze
 
-  def print_pic(number)
+  def print_hangman_pic(number)
     index = number - 1
     puts HANGMAN_PICS[index]
   end
