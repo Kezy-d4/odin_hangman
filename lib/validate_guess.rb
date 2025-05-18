@@ -44,6 +44,10 @@ module ValidateGuess
     valid_letter?(guess) || valid_word?(guess)
   end
 
+  def valid_but_incorrect?(guess)
+    valid?(guess) && !correct_letter?(guess) && !correct_word?(guess)
+  end
+
   def single_length_feedback(guess)
     if valid_letter?(guess)
       correct_letter?(guess) ? correct_letter_msg(guess) : incorrect_letter_msg(guess)
@@ -54,9 +58,9 @@ module ValidateGuess
     end
   end
 
-  def full_length_feedback(guess, secret_word)
+  def full_length_feedback(guess)
     if valid_word?(guess)
-      correct_word?(guess) ? correct_word_msg(secret_word) : incorrect_word_msg(guess)
+      correct_word?(guess) ? correct_word_msg : incorrect_word_msg(guess)
     else
       invalid_input_msg
     end
@@ -66,7 +70,7 @@ module ValidateGuess
     if single_length?(guess)
       single_length_feedback(guess)
     elsif full_length?(guess)
-      full_length_feedback(guess, secret_word)
+      full_length_feedback(guess)
     else
       invalid_input_msg
     end

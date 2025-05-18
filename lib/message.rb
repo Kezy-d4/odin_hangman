@@ -25,9 +25,8 @@ module Message
     try_again_msg
   end
 
-  def correct_word_msg(secret_word)
-    puts "That's it! You guessed the secret word which was " \
-         "\"#{secret_word.join.upcase}\"."
+  def correct_word_msg
+    puts "You got it! "
   end
 
   def incorrect_word_msg(guess)
@@ -44,11 +43,21 @@ module Message
     puts "Please try again."
   end
 
-  def next_guess_msg
-    puts "On to your next guess."
+  def player_wins_msg
+    puts "You guessed the secret word and saved the Hangman. Well played!"
+    secret_word_msg
   end
 
-  def well_played_msg
-    puts "Well played!"
+  def player_loses_msg
+    puts "You didn't guess the secret word in time. Poor Hangman..."
+    secret_word_msg
+  end
+
+  def secret_word_msg
+    puts "The secret word was \"#{secret_word.join.upcase}\"."
+  end
+
+  def secret_word_length_msg
+    puts "The secret word is #{secret_word.length} letters long."
   end
 end
