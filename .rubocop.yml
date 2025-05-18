@@ -24,4 +24,3 @@ Style/FrozenStringLiteralComment:
 # RuboCop for the specified files:
 # AllCops:
   # Exclude:
-    # - "hangman.rb"

@@ -7,7 +7,6 @@ class Player
     @letters_guessed = []
   end
 
-  attr_reader :game
   attr_accessor :letters_guessed
 
   def guess
