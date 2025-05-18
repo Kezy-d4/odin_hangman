@@ -1,4 +1,4 @@
-# Stores and prints the hangman ascii art.
+# Stores and prints the hangman ASCII art.
 module Display
   HANGMAN_PICS = ['
     +---+
@@ -58,7 +58,7 @@ module Display
         |
   ========='].freeze
 
-  def print_pic(number)
+  def print_hangman_pic(number)
     index = number - 1
     puts HANGMAN_PICS[index]
   end

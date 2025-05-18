@@ -3,7 +3,7 @@
 # word.
 class SecretWord
   def initialize
-    @secret_word = randomly_choose_secret_word
+    @secret_word = randomly_assign_secret_word
   end
 
   attr_reader :secret_word
@@ -24,11 +24,7 @@ class SecretWord
     word_list_from_source_to_array.select { |word| valid_word_length?(word) }
   end
 
-  def randomly_choose_secret_word
+  def randomly_assign_secret_word
     process_word_list.sample
-  end
-
-  def to_s
-    "The secret word is #{secret_word}."
   end
 end
