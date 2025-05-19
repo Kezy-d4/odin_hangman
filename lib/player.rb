@@ -1,5 +1,6 @@
 require_relative "message"
 
+# Defines and stores the player's state, and allows them to input their guess.
 class Player
   include Message
 
@@ -15,11 +16,5 @@ class Player
   def guess
     input_instructions_msg
     gets.chomp.downcase.chars
-  end
-
-  def to_s
-    "You've already guessed these letters: " \
-      "\"#{letters_guessed.join(', ').upcase}\". " \
-      "Guesses remaining: #{guesses_available - incorrect_guesses}."
   end
 end

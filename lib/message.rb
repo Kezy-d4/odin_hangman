@@ -60,4 +60,11 @@ module Message
   def secret_word_length_msg
     puts "The secret word is #{secret_word.length} letters long."
   end
+
+  def player_state_msg
+    puts "You've already guessed these letters: " \
+         "\"#{player.letters_guessed.join(', ').upcase}\". " \
+         "Incorrect guesses remaining: " \
+         "#{player.guesses_available - player.incorrect_guesses}."
+  end
 end

@@ -4,6 +4,7 @@ require_relative "validate_guess"
 require_relative "display"
 require_relative "message"
 
+# Coordinates the gameplay loop
 class Game
   include ValidateGuess
   include Display
@@ -30,14 +31,14 @@ class Game
     loop do
       guess = prompt_guess
       clear_console_and_feedback(guess)
-      update_player_stats_and_print_hangman(guess)
+      update_player_state_and_print_hangman(guess)
       break if game_over?(guess)
     end
   end
 
   def prompt_guess
     print_secret_word
-    puts player
+    player_state_msg
     player.guess
   end
 
@@ -46,7 +47,7 @@ class Game
     feedback(guess)
   end
 
-  def update_player_stats_and_print_hangman(guess)
+  def update_player_state_and_print_hangman(guess)
     player.incorrect_guesses += 1 if valid_but_incorrect?(guess)
     print_hangman_pic(player.incorrect_guesses) unless player.incorrect_guesses.zero?
     player.letters_guessed << guess.join if valid_letter?(guess)
@@ -63,11 +64,6 @@ class Game
 
   def game_over?(guess)
     player_wins?(guess) || player_loses?
-  end
-
-  def to_s
-    "The secret word is \"#{secret_word.join.upcase}\" and is " \
-      "#{secret_word.length} letters long."
   end
 end
 
