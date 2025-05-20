@@ -67,4 +67,8 @@ module Message
          "Incorrect guesses remaining: " \
          "#{player.guesses_available - player.incorrect_guesses}."
   end
+
+  def ask_to_play_again_msg
+    print "Would you like to play again? [Y/n]: "
+  end
 end

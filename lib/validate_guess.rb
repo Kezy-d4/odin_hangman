@@ -1,4 +1,4 @@
-# Validates the player's guess and prints the appropriate feedback to the console.
+# Validates the players' guess and prints the appropriate feedback to the console.
 module ValidateGuess
   def single_length?(guess)
     guess.length == 1

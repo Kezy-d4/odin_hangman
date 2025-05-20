@@ -1,6 +1,6 @@
 require_relative "message"
 
-# Defines and stores the player's state, and allows them to input their guess.
+# Defines and stores the players' state, and allows them to submit their input.
 class Player
   include Message
 
@@ -16,5 +16,11 @@ class Player
   def guess
     input_instructions_msg
     gets.chomp.downcase.chars
+  end
+
+  def play_again?
+    ask_to_play_again_msg
+    ans = gets.chomp.downcase
+    %w[yes y].include?(ans)
   end
 end

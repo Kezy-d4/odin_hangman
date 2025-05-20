@@ -17,7 +17,21 @@ class Game
 
   attr_reader :secret_word, :player
 
-  def play
+  def self.play
+    loop do
+      g = Game.new
+      g.game_loop
+      ans = g.player.play_again?
+      system "clear"
+      system "cls"
+      next if ans
+
+      puts "Alright, thanks for playing. See you soon!"
+      break
+    end
+  end
+
+  def game_loop
     welcome_msg
     secret_word_length_msg
     guess_loop
@@ -66,6 +80,3 @@ class Game
     player_wins?(guess) || player_loses?
   end
 end
-
-# Testing
-Game.new.play
