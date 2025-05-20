@@ -20,7 +20,5 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 
-# Toggle this config on/off via a code comment to completely enable or disable 
-# RuboCop for the specified files:
 # AllCops:
   # Exclude:

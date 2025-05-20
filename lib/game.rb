@@ -10,20 +10,23 @@ class Game
   include Display
   include Message
 
+  @@win_streak = 0 # rubocop:disable Style/ClassVars
+
   def initialize
     @secret_word = SecretWord.new.secret_word.chars
     @player = Player.new
   end
 
   attr_reader :secret_word, :player
+  attr_accessor :win_streak
 
   def self.play
     loop do
       g = Game.new
       g.game_loop
+      g.player_loses? ? @@win_streak = 0 : @@win_streak += 1 # rubocop:disable Style/ClassVars
       ans = g.player.play_again?
       system "clear"
-      system "cls"
       next if ans
 
       puts "Alright, thanks for playing. See you soon!"
@@ -34,9 +37,14 @@ class Game
   def game_loop
     welcome_msg
     secret_word_length_msg
+    win_streak_msg(@@win_streak)
     guess_loop
     player_loses? ? print_secret_word : print_full_secret_word
     player_loses? ? player_loses_msg : player_wins_msg
+  end
+
+  def player_loses?
+    player.incorrect_guesses == Display::HANGMAN_PICS.length
   end
 
   private
@@ -65,10 +73,6 @@ class Game
     player.incorrect_guesses += 1 if valid_but_incorrect?(guess)
     print_hangman_pic(player.incorrect_guesses) unless player.incorrect_guesses.zero?
     player.letters_guessed << guess.join if valid_letter?(guess)
-  end
-
-  def player_loses?
-    player.incorrect_guesses == Display::HANGMAN_PICS.length
   end
 
   def player_wins?(guess)

@@ -71,4 +71,10 @@ module Message
   def ask_to_play_again_msg
     print "Would you like to play again? [Y/n]: "
   end
+
+  def win_streak_msg(win_streak)
+    v1 = "Win streak: #{win_streak}."
+    v2 = "Win streak: #{win_streak}. You're on a roll!"
+    puts win_streak.positive? ? v2 : v1
+  end
 end

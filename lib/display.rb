@@ -84,6 +84,5 @@ module Display
 
   def clear_console
     system "clear"
-    system "cls"
   end
 end
