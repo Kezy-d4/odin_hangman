@@ -1,4 +1,5 @@
-# Prints the Hangman ASCII art to the console, and clears the console.
+# Prints core game elements such as the Hangman ASCII art and secret word to the
+# console, and clears the console.
 module Display
   HANGMAN_PICS = ['
     +---+
