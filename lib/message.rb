@@ -1,6 +1,6 @@
 require "colorize"
 
-# Informs, instructs, and updates the player about the game via messages printed
-# to the console for a responsive user experience.
+# Stores instructional and informative messages relating to the game which can
+# be printed to the console for a responsive user experience.
 module Message
 end
