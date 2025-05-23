@@ -64,6 +64,20 @@ module Display
     puts HANGMAN_PICS[index]
   end
 
+  def print_obscured_secret_word(secret_word)
+    puts
+    secret_word.each { print "_ " }
+    2.times { puts }
+  end
+
+  def print_secret_word_progress(secret_word, player)
+    puts
+    secret_word.each do |letter|
+      print player.letters_already_guessed.include?(letter) ? "#{letter} " : "_ "
+    end
+    2.times { puts }
+  end
+
   def clear_console
     system "clear"
     system "cls"
