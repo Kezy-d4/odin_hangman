@@ -1,84 +1,88 @@
-# Validates player's input and prints corresponding feedback to the console.
-# TODO: convert this module to a class to alleviate the messy passing of
-# arguments
-module ValidateInput
-  def exit?(input)
-    input == "exit"
+require_relative "message"
+
+# Validates player's input and prints corresponding feedback to console.
+class ValidateInput
+  include Message
+
+  def initialize(input, secret_word, player)
+    @input = input
+    @secret_word = secret_word
+    @player = player
   end
 
-  def single_length?(input)
+  attr_reader :input, :secret_word, :player
+
+  def single_length?
     input.length == 1
   end
 
-  def full_length?(input, secret_word)
+  def full_length?
     input.length == secret_word.length
   end
 
-  def all_letters?(input)
+  def all_letters?
     input.all? { |char| ("a".."z").to_a.include?(char) }
   end
 
-  def letter_not_yet_guessed?(input, player)
+  def letter_not_yet_guessed?
     input.none? { |char| player.letters_already_guessed.include?(char) }
   end
 
-  def letter_already_guessed?(input, player)
+  def letter_already_guessed?
     input.any? { |char| player.letters_already_guessed.include?(char) }
   end
 
-  def valid_letter?(input, player)
-    single_length?(input) && all_letters?(input) && letter_not_yet_guessed?(input, player)
+  def valid_letter?
+    single_length? && all_letters? && letter_not_yet_guessed?
   end
 
-  def correct_letter?(input, secret_word)
-    valid_letter?(input) && secret_word.include?(input.join)
+  def correct_letter?
+    valid_letter? && secret_word.include?(input.join)
   end
 
-  def invalid_letter?(input)
-    single_length?(input) && all_letters?(input) && letter_already_guessed?(input)
+  def invalid_letter?
+    single_length? && all_letters? && letter_already_guessed?
   end
 
-  def valid_word?(input)
-    full_length?(input) && all_letters?(input)
+  def valid_word?
+    full_length? && all_letters?
   end
 
-  def correct_word?(input, secret_word)
+  def correct_word?
     input == secret_word
   end
 
-  def valid?(input)
-    valid_letter?(input) || valid_word?(input)
+  def valid?
+    valid_letter? || valid_word?
   end
 
-  def valid_but_incorrect?(input)
-    valid?(input) && !correct_letter?(input) && !correct_word?(input)
+  def valid_but_incorrect?
+    valid? && !correct_letter? && !correct_word?
   end
 
-  def single_length_feedback(input, secret_word, player)
-    if valid_letter?(input, player)
-      puts correct_letter?(input, secret_word) ? correct_letter_msg(input) : incorrect_letter_msg(input)
-    elsif invalid_letter?(input)
-      puts invalid_letter_msg(input)
+  def single_length_feedback
+    if valid_letter?
+      correct_letter? ? correct_letter_msg(input) : incorrect_letter_msg(input)
+    elsif invalid_letter?
+      invalid_letter_msg(input)
     else
-      puts invalid_input_msg
+      invalid_input_msg
     end
   end
 
-  def full_length_feedback(input, secret_word)
-    if valid_word?(input)
-      puts correct_word?(input, secret_word) ? correct_word_msg : incorrect_word_msg(input)
+  def full_length_feedback
+    if valid_word?
+      correct_word? ? correct_word_msg : incorrect_word_msg(input)
     else
-      puts invalid_input_msg
+      invalid_input_msg
     end
   end
 
-  def feedback(input, secret_word, player)
-    if exit?(input)
-      puts save_and_exit_msg
-    elsif single_length?(input)
-      single_length_feedback(input, secret_word, player)
-    elsif full_length?(input, secret_word)
-      full_length_feedback(input, secret_word)
+  def feedback
+    if single_length?
+      single_length_feedback
+    elsif full_length?
+      full_length_feedback
     else
       invalid_input_msg
     end

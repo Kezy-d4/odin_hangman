@@ -9,7 +9,6 @@ require_relative "validate_input"
 class Round
   include Display
   include Message
-  include ValidateInput
 
   def initialize
     @secret_word = SecretWord.new.secret_word.chars
@@ -21,12 +20,49 @@ class Round
 
   def play
     loop do
-      turn = Turn.new(secret_word, player)
-      player_input = turn.play
+      player_input = play_turn
       clear_console
-      feedback(player_input, secret_word, player)
-      return player_input if exit?(player_input)
+      return player_input.join if player.exit?(player_input)
+
+      validate(player_input)
+      next unless round_over?(player_input)
+
+      clear_console
+      end_of_round
+      break
     end
+  end
+
+  def play_turn
+    turn = Turn.new(secret_word, player)
+    turn.play
+  end
+
+  def validate(player_input)
+    validation = ValidateInput.new(player_input, secret_word, player)
+    puts validation.feedback
+    player.incorrect_guesses_made += 1 if validation.valid_but_incorrect?
+    player.incorrect_guesses_remaining -= 1 if validation.valid_but_incorrect?
+    player.letters_already_guessed << player_input.join if validation.valid_letter?
+  end
+
+  def player_won?(player_input)
+    secret_word.all? { |letter| player.letters_already_guessed.include?(letter) } ||
+      player_input == secret_word
+  end
+
+  def player_lost?
+    player.incorrect_guesses_remaining.zero?
+  end
+
+  def round_over?(player_input)
+    player_won?(player_input) || player_lost?
+  end
+
+  def end_of_round # rubocop:disable Metrics/AbcSize
+    puts player_lost? ? player_lost_msg(secret_word) : player_won_msg
+    print_hangman_pic(player.incorrect_guesses_made) unless player.incorrect_guesses_made.zero?
+    player_lost? ? print_secret_word_progress(secret_word, player) : print_secret_word(secret_word)
   end
 end
 

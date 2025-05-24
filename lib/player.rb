@@ -15,9 +15,13 @@ class Player
   attr_accessor :letters_already_guessed, :incorrect_guesses_made,
                 :incorrect_guesses_remaining
 
-  def guess
+  def input
     print input_instructions_msg
     gets.chomp.downcase.chars
+  end
+
+  def exit?(input)
+    input.join == "exit"
   end
 
   def play_again?

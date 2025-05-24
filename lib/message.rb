@@ -13,18 +13,29 @@ module Message
     "Would you like to play again? Your game will be saved if not. [Y/n]: "
   end
 
-  def try_again_msg
-    "Please try again."
-  end
-
   def invalid_input_msg
     "Invalid previous input! Ensure your guess consists only of " \
-    "letters and is of a valid length.".colorize(:red)
-    puts try_again_msg
+    "letters and is of a valid length. Please try again.".colorize(:red)
   end
 
   def save_and_exit_msg
     "Alright, your game has been saved. See you soon!"
+  end
+
+  def player_state_msg(player)
+    "You've already guessed these letters: " \
+      "\"#{player.letters_already_guessed.join(', ').upcase}\". " \
+      "Incorrect guesses remaining: " \
+      "#{player.incorrect_guesses_remaining}."
+  end
+
+  def player_won_msg
+    "You guessed the secret word and saved the Hangman. Well played!"
+  end
+
+  def player_lost_msg(secret_word)
+    "You didn't guess the secret word in time. Poor Hangman... The secret " \
+      "word was \"#{secret_word.join.upcase}\"."
   end
 
   def correct_letter_msg(input)
@@ -36,8 +47,8 @@ module Message
   end
 
   def invalid_letter_msg(input)
-    "You've already guessed \"#{input.join.upcase}\"!".colorize(:red)
-    puts try_again_msg
+    "You've already guessed \"#{input.join.upcase}\"! " \
+    "Please try again.".colorize(:red)
   end
 
   def correct_word_msg
