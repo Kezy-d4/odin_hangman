@@ -1,8 +1,26 @@
 require "colorize"
 
 # Stores instructional and informative messages relating to the game which can
-# be printed to the console for a responsive user experience.
+# be printed to console for a responsive user experience.
 module Message
+  def save_loaded_msg
+    "Alright, let's resume your previous saved game."
+  end
+
+  def new_game_msg
+    "Alright, let's start a new game."
+  end
+
+  def welcome_msg
+    "Let's play Hangman!"
+  end
+
+  def win_streak_msg(win_streak)
+    v1 = "Win streak: #{win_streak}."
+    v2 = "Win streak: #{win_streak}. You're on a roll!"
+    win_streak.positive? ? v2 : v1
+  end
+
   def input_instructions_msg
     "Submit your next guess. You may guess a single letter or try to guess " \
       "the entire word. Alternatively, submit \"exit\" to save and exit the " \
@@ -20,6 +38,10 @@ module Message
 
   def save_and_exit_msg
     "Alright, your game has been saved. See you soon!"
+  end
+
+  def load_save_msg
+    "Would you like to load your previously saved game? [Y/n]: "
   end
 
   def player_state_msg(player)
@@ -52,7 +74,7 @@ module Message
   end
 
   def correct_word_msg
-    "You got it! "
+    "You got it!"
   end
 
   def incorrect_word_msg(input)

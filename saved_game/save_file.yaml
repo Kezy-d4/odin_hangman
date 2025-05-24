@@ -1,0 +1,15 @@
+---
+:win_streak: 1
+:current_round: !ruby/object:Round
+  secret_word:
+  - b
+  - e
+  - t
+  - t
+  - i
+  - "n"
+  - g
+  player: !ruby/object:Player
+    letters_already_guessed: []
+    incorrect_guesses_made: 0
+    incorrect_guesses_remaining: 8

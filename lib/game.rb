@@ -1,23 +1,56 @@
 require "yaml"
 require_relative "round"
+require_relative "display"
+require_relative "message"
 
 # Coordinates overall gameplay loop as well saving and loading the game. The
 # game will only accommodate one save file at a time.
 class Game
+  extend Display
+  extend Message
+
   SAVED_GAME_PATH = "saved_game/save_file.yaml".freeze
 
-  def initialize(round_number = 0, win_streak = 0, current_round = nil)
-    @round_number = round_number
+  def initialize(win_streak = 0, current_round = nil)
     @win_streak = win_streak
     @current_round = current_round
   end
 
-  attr_accessor :round_number, :win_streak, :current_round
+  attr_accessor :win_streak, :current_round
+
+  def self.construct
+    game = nil
+    game = load_game if !File.empty?(SAVED_GAME_PATH) && load_previous_save?
+    game = Game.new if game.nil?
+    game.current_round = Round.new if game.current_round.nil?
+    game
+  end
+
+  def self.play # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    game = start
+    loop do
+      clear_console
+      puts win_streak_msg(game.win_streak)
+      game.current_round = Round.new if game.current_round.nil?
+      round_result = game.current_round.play
+      game.save_game && return if round_result == "exit"
+
+      game.current_round = nil
+      round_result == "won" ? game.win_streak += 1 : game.win_streak = 0
+      play_again? ? next : game.save_game && return
+    end
+  end
+
+  def self.start
+    clear_console
+    puts welcome_msg
+    construct
+  end
 
   def save_game
+    puts self.class.save_and_exit_msg
     serialized = YAML.dump(
-      { round_number: @round_number,
-        win_streak: @win_streak,
+      { win_streak: @win_streak,
         current_round: @current_round }
     )
     File.write(SAVED_GAME_PATH, serialized)
@@ -29,9 +62,28 @@ class Game
       permitted_classes: [Round, SecretWord, Player, Symbol]
     )
     new(
-      deserialized[:round_number],
       deserialized[:win_streak],
       deserialized[:current_round]
     )
   end
+
+  def self.load_previous_save?
+    print load_save_msg
+    inp = gets.chomp.downcase
+    if %w[y yes].include?(inp)
+      puts save_loaded_msg
+      true
+    else
+      puts new_game_msg
+      false
+    end
+  end
+
+  def self.play_again?
+    print play_again_msg
+    inp = gets.chomp.downcase
+    %w[y yes].include?(inp)
+  end
 end
+
+Game.play

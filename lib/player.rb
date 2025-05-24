@@ -2,7 +2,7 @@ require_relative "display"
 require_relative "message"
 
 # Defines and stores state relating to the player, and allows them to submit
-# their input.
+# their input during a round.
 class Player
   include Message
 
@@ -22,11 +22,5 @@ class Player
 
   def exit?(input)
     input.join == "exit"
-  end
-
-  def play_again?
-    print play_again_msg
-    inp = gets.chomp.downcase
-    %w[y yes].include?(inp)
   end
 end

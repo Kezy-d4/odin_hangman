@@ -69,5 +69,3 @@ class Round
     player_lost? ? "lost" : "won"
   end
 end
-
-p Round.new.play
