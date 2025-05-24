@@ -29,7 +29,7 @@ class Round
 
       clear_console
       end_of_round
-      break
+      return result
     end
   end
 
@@ -64,6 +64,10 @@ class Round
     print_hangman_pic(player.incorrect_guesses_made) unless player.incorrect_guesses_made.zero?
     player_lost? ? print_secret_word_progress(secret_word, player) : print_secret_word(secret_word)
   end
+
+  def result
+    player_lost? ? "lost" : "won"
+  end
 end
 
-Round.new.play
+p Round.new.play
