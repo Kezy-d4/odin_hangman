@@ -10,6 +10,8 @@
   - "n"
   - g
   player: !ruby/object:Player
-    letters_already_guessed: []
-    incorrect_guesses_made: 0
-    incorrect_guesses_remaining: 8
+    letters_already_guessed:
+    - a
+    - e
+    incorrect_guesses_made: 1
+    incorrect_guesses_remaining: 7

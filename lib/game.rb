@@ -26,12 +26,11 @@ class Game
     game
   end
 
-  def self.play # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def self.play # rubocop:disable Metrics/AbcSize
     game = start
     loop do
-      clear_console
-      puts win_streak_msg(game.win_streak)
       game.current_round = Round.new if game.current_round.nil?
+      round_open_info(game)
       round_result = game.current_round.play
       game.save_game && return if round_result == "exit"
 
@@ -45,6 +44,12 @@ class Game
     clear_console
     puts welcome_msg
     construct
+  end
+
+  def self.round_open_info(game)
+    clear_console
+    puts win_streak_msg(game.win_streak)
+    puts secret_word_length_msg(game.current_round.secret_word)
   end
 
   def save_game
@@ -67,14 +72,16 @@ class Game
     )
   end
 
-  def self.load_previous_save?
+  def self.load_previous_save? # rubocop:disable Metrics/MethodLength
     print load_save_msg
     inp = gets.chomp.downcase
     if %w[y yes].include?(inp)
       puts save_loaded_msg
+      sleep(2.5)
       true
     else
       puts new_game_msg
+      sleep(2.5)
       false
     end
   end

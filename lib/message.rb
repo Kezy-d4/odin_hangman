@@ -21,6 +21,10 @@ module Message
     win_streak.positive? ? v2 : v1
   end
 
+  def secret_word_length_msg(secret_word)
+    puts "The secret word is #{secret_word.length} letters long."
+  end
+
   def input_instructions_msg
     "Submit your next guess. You may guess a single letter or try to guess " \
       "the entire word. Alternatively, submit \"exit\" to save and exit the " \
