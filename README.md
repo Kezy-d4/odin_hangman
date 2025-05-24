@@ -17,6 +17,7 @@ version, and then run the main file in the root of the repository, `main.rb`.
 * Previously saved game may be loaded upon running the program
 
 # Video Demonstration
+[ruby_hangman.webm](https://github.com/user-attachments/assets/689e9e7f-78d4-43ac-b784-8831025384c2)
 
 # Dependencies
 * [The colorize gem](https://github.com/fazibear/colorize)
