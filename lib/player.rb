@@ -1,26 +1,26 @@
+require_relative "display"
 require_relative "message"
 
-# Defines and stores the players' state, and allows them to submit their input.
+# Defines and stores state relating to the player, and allows them to submit
+# their input during a round.
 class Player
   include Message
 
   def initialize
-    @guesses_available = Display::HANGMAN_PICS.length
-    @letters_guessed = []
-    @incorrect_guesses = 0
+    @letters_already_guessed = []
+    @incorrect_guesses_made = 0
+    @incorrect_guesses_remaining = Display::HANGMAN_PICS.length
   end
 
-  attr_reader :guesses_available
-  attr_accessor :letters_guessed, :incorrect_guesses
+  attr_accessor :letters_already_guessed, :incorrect_guesses_made,
+                :incorrect_guesses_remaining
 
-  def guess
-    input_instructions_msg
+  def input
+    print input_instructions_msg
     gets.chomp.downcase.chars
   end
 
-  def play_again?
-    ask_to_play_again_msg
-    ans = gets.chomp.downcase
-    %w[yes y].include?(ans)
+  def exit?(input)
+    input.join == "exit"
   end
 end

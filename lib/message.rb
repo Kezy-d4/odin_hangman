@@ -1,80 +1,87 @@
 require "colorize"
 
-# Informs, instructs, and updates the player about the game via messages printed
-# to the console for a responsive user experience.
+# Stores instructional and informative messages relating to the game which can
+# be printed to console for a responsive user experience.
 module Message
+  def save_loaded_msg
+    "Alright, let's resume your previous saved game."
+  end
+
+  def new_game_msg
+    "Alright, let's start a new game."
+  end
+
   def welcome_msg
-    puts "Let's play Hangman!"
-  end
-
-  def input_instructions_msg
-    print "Submit your next case insensitive guess. You may guess a single " \
-          "letter or try to guess the entire word: "
-  end
-
-  def correct_letter_msg(guess)
-    puts "Yes! \"#{guess.join.upcase}\" exists in the word."
-  end
-
-  def incorrect_letter_msg(guess)
-    puts "There is no \"#{guess.join.upcase}\" in the word."
-  end
-
-  def invalid_letter_msg(guess)
-    puts "You've already guessed \"#{guess.join.upcase}\"!".colorize(:red)
-    try_again_msg
-  end
-
-  def correct_word_msg
-    puts "You got it! "
-  end
-
-  def incorrect_word_msg(guess)
-    puts "\"#{guess.join.upcase}\" is not the correct word."
-  end
-
-  def invalid_input_msg
-    puts "Invalid previous input! Ensure your guess consists only of " \
-         "letters and is of a valid length.".colorize(:red)
-    try_again_msg
-  end
-
-  def try_again_msg
-    puts "Please try again."
-  end
-
-  def player_wins_msg
-    puts "You guessed the secret word and saved the Hangman. Well played!"
-    secret_word_msg
-  end
-
-  def player_loses_msg
-    puts "You didn't guess the secret word in time. Poor Hangman..."
-    secret_word_msg
-  end
-
-  def secret_word_msg
-    puts "The secret word was \"#{secret_word.join.upcase}\"."
-  end
-
-  def secret_word_length_msg
-    puts "The secret word is #{secret_word.length} letters long."
-  end
-
-  def player_state_msg
-    puts "You've already guessed these letters: " \
-         "\"#{player.letters_guessed.join(', ').upcase}\". " \
-         "Incorrect guesses remaining: " \
-         "#{player.guesses_available - player.incorrect_guesses}."
-  end
-
-  def ask_to_play_again_msg
-    print "Would you like to play again? [Y/n]: "
+    "Let's play Hangman!"
   end
 
   def win_streak_msg(win_streak)
     v1 = "Win streak: #{win_streak}."
     v2 = "Win streak: #{win_streak}. You're on a roll!"
-    puts win_streak.positive? ? v2 : v1
+    win_streak.positive? ? v2 : v1
+  end
+
+  def secret_word_length_msg(secret_word)
+    puts "The secret word is #{secret_word.length} letters long."
+  end
+
+  def input_instructions_msg
+    "Submit your next guess. You may guess a single letter or try to guess " \
+      "the entire word. Alternatively, submit \"exit\" to save and exit the " \
+      "game. Your input is not case sensitive: "
+  end
+
+  def play_again_msg
+    "Would you like to play again? Your game will be saved if not. [Y/n]: "
+  end
+
+  def invalid_input_msg
+    "Invalid previous input! Ensure your guess consists only of " \
+    "letters and is of a valid length. Please try again.".colorize(:red)
+  end
+
+  def save_and_exit_msg
+    "Alright, your game has been saved. See you soon!"
+  end
+
+  def load_save_msg
+    "Would you like to load your previously saved game? [Y/n]: "
+  end
+
+  def player_state_msg(player)
+    "You've already guessed these letters: " \
+      "\"#{player.letters_already_guessed.join(', ').upcase}\". " \
+      "Incorrect guesses remaining: " \
+      "#{player.incorrect_guesses_remaining}."
+  end
+
+  def player_won_msg
+    "You guessed the secret word and saved the Hangman. Well played!"
+  end
+
+  def player_lost_msg(secret_word)
+    "You didn't guess the secret word in time. Poor Hangman... The secret " \
+      "word was \"#{secret_word.join.upcase}\"."
+  end
+
+  def correct_letter_msg(input)
+    "Yes! \"#{input.join.upcase}\" exists in the word."
+  end
+
+  def incorrect_letter_msg(input)
+    "There is no \"#{input.join.upcase}\" in the word."
+  end
+
+  def invalid_letter_msg(input)
+    "You've already guessed \"#{input.join.upcase}\"! " \
+    "Please try again.".colorize(:red)
+  end
+
+  def correct_word_msg
+    "You got it!"
+  end
+
+  def incorrect_word_msg(input)
+    "\"#{input.join.upcase}\" is not the correct word."
   end
 end

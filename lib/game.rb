@@ -1,86 +1,95 @@
-require_relative "secret_word"
-require_relative "player"
-require_relative "validate_guess"
+require "yaml"
+require_relative "round"
 require_relative "display"
 require_relative "message"
 
-# Coordinates the gameplay loop
+# Coordinates overall gameplay loop as well saving and loading the game. The
+# game will only accommodate one save file at a time.
 class Game
-  include ValidateGuess
-  include Display
-  include Message
+  extend Display
+  extend Message
 
-  @@win_streak = 0 # rubocop:disable Style/ClassVars
+  SAVED_GAME_PATH = "saved_game/save_file.yaml".freeze
 
-  def initialize
-    @secret_word = SecretWord.new.secret_word.chars
-    @player = Player.new
+  def initialize(win_streak = 0, current_round = nil)
+    @win_streak = win_streak
+    @current_round = current_round
   end
 
-  attr_reader :secret_word, :player
-  attr_accessor :win_streak
+  attr_accessor :win_streak, :current_round
 
-  def self.play
+  def self.construct
+    game = nil
+    game = load_game if !File.empty?(SAVED_GAME_PATH) && load_previous_save?
+    game = Game.new if game.nil?
+    game.current_round = Round.new if game.current_round.nil?
+    game
+  end
+
+  def self.play # rubocop:disable Metrics/AbcSize
+    game = start
     loop do
-      g = Game.new
-      g.game_loop
-      g.player_loses? ? @@win_streak = 0 : @@win_streak += 1 # rubocop:disable Style/ClassVars
-      ans = g.player.play_again?
-      system "clear"
-      next if ans
+      game.current_round = Round.new if game.current_round.nil?
+      round_open_info(game)
+      round_result = game.current_round.play
+      game.save_game && return if round_result == "exit"
 
-      puts "Alright, thanks for playing. See you soon!"
-      break
+      game.current_round = nil
+      round_result == "won" ? game.win_streak += 1 : game.win_streak = 0
+      play_again? ? next : game.save_game && return
     end
   end
 
-  def game_loop
-    welcome_msg
-    secret_word_length_msg
-    win_streak_msg(@@win_streak)
-    guess_loop
-    player_loses? ? print_secret_word : print_full_secret_word
-    player_loses? ? player_loses_msg : player_wins_msg
-  end
-
-  def player_loses?
-    player.incorrect_guesses == Display::HANGMAN_PICS.length
-  end
-
-  private
-
-  def guess_loop
-    loop do
-      guess = prompt_guess
-      clear_console_and_feedback(guess)
-      update_player_state_and_print_hangman(guess)
-      break if game_over?(guess)
-    end
-  end
-
-  def prompt_guess
-    print_secret_word
-    player_state_msg
-    player.guess
-  end
-
-  def clear_console_and_feedback(guess)
+  def self.start
     clear_console
-    feedback(guess)
+    puts welcome_msg
+    sleep(2.5)
+    construct
   end
 
-  def update_player_state_and_print_hangman(guess)
-    player.incorrect_guesses += 1 if valid_but_incorrect?(guess)
-    print_hangman_pic(player.incorrect_guesses) unless player.incorrect_guesses.zero?
-    player.letters_guessed << guess.join if valid_letter?(guess)
+  def self.round_open_info(game)
+    clear_console
+    puts win_streak_msg(game.win_streak)
+    puts secret_word_length_msg(game.current_round.secret_word)
   end
 
-  def player_wins?(guess)
-    correct_word?(guess) ||
-      secret_word.all? { |letter| player.letters_guessed.include?(letter) }
+  def save_game
+    puts self.class.save_and_exit_msg
+    serialized = YAML.dump(
+      { win_streak: @win_streak,
+        current_round: @current_round }
+    )
+    File.write(SAVED_GAME_PATH, serialized)
   end
 
-  def game_over?(guess)
-    player_wins?(guess) || player_loses?
+  def self.load_game
+    deserialized = YAML.load_file(
+      SAVED_GAME_PATH,
+      permitted_classes: [Round, SecretWord, Player, Symbol]
+    )
+    new(
+      deserialized[:win_streak],
+      deserialized[:current_round]
+    )
+  end
+
+  def self.load_previous_save? # rubocop:disable Metrics/MethodLength
+    print load_save_msg
+    inp = gets.chomp.downcase
+    if %w[y yes].include?(inp)
+      puts save_loaded_msg
+      sleep(2.5)
+      true
+    else
+      puts new_game_msg
+      sleep(2.5)
+      false
+    end
+  end
+
+  def self.play_again?
+    print play_again_msg
+    inp = gets.chomp.downcase
+    %w[y yes].include?(inp)
   end
 end
